@@ -52,6 +52,9 @@ contract RPSCommitReveal {
         if (numPlayer == 0) {
             afterStartTimeUnit.setStartTime();
         }
+        if (numPlayer == 2){
+            afterStartTimeUnit.setStartTime();
+        }
 
         numPlayer++;
     }
