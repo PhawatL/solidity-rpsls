@@ -54,7 +54,7 @@ contract CommitReveal {
         return keccak256(abi.encodePacked(data));
     }
 
-    function reset() public {
-      
+    function resetPlayer(address player) public {
+        delete commits[player];
     }
 }
