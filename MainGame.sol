@@ -34,6 +34,13 @@ contract RPSCommitReveal {
     }
 
     function addPlayer() public payable {
+        require(
+            msg.sender == 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4 ||
+                msg.sender == 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2 ||
+                msg.sender == 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db ||
+                msg.sender == 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB,
+            "You are not allowed to join"
+        );
         require(numPlayer < 2, "Only two players allowed");
         if (numPlayer > 0) {
             require(msg.sender != players[0], "Player already joined");
@@ -176,24 +183,27 @@ contract RPSCommitReveal {
             )
         );
         elapsed = afterCommitTimeUnit.elapsedSeconds();
-        if (!isPlayed[players[0]] && !isPlayed[players[1]]) { // no one commit
+        if (!isPlayed[players[0]] && !isPlayed[players[1]]) {
+            // no one commit
             account0.transfer(reward / 2);
             account1.transfer(reward / 2);
-        } else if (isPlayed[players[0]] && !isPlayed[players[1]]) { // only 1 committed
+        } else if (isPlayed[players[0]] && !isPlayed[players[1]]) {
+            // only 1 committed
             account0.transfer(reward);
-        } else if (!isPlayed[players[0]] && isPlayed[players[1]]) { // only 1 committed
+        } else if (!isPlayed[players[0]] && isPlayed[players[1]]) {
+            // only 1 committed
             account1.transfer(reward);
-        }else {
+        } else {
             // Case 3: Both committed but didn't reveal
             require(
                 elapsed > 30,
                 string(
-                abi.encodePacked(
-                    "Elapsed time: ",
-                    uintToString(elapsed),
-                    " seconds. Please wait until 30 seconds after last player commit."
+                    abi.encodePacked(
+                        "Elapsed time: ",
+                        uintToString(elapsed),
+                        " seconds. Please wait until 30 seconds after last player commit."
+                    )
                 )
-            )
             );
             if (numReveal == 0) {
                 account0.transfer(reward / 2);
@@ -226,7 +236,6 @@ contract RPSCommitReveal {
         numPlayer = 0;
         reward = 0;
     }
-
 
     function abs(int256 x, int256 y) private pure returns (int256) {
         return (x - y) >= 0 ? (x - y) : -(x - y);
